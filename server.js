@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-const add = (value1, value2) => value1 + value2;
-const substract = (value1, value2) => value1 - value2;
-const multiply = (value1, value2) => value1 * value2;
-const divide = (value1, value2) => value1 / value2;
+const add = (value1, value2) => parseInt(value1) + parseInt(value2);
+const substract = (value1, value2) => parseInt(value1) - parseInt(value2);
+const multiply = (value1, value2) => parseInt(value1) * parseInt(value2);
+const divide = (value1, value2) => parseInt(value1) / parseInt(value2);
 
 const myLogger = (req, res, next) => {
 	const visitTime = new Date();
