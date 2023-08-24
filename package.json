@@ -1,0 +1,16 @@
+{
+  "name": "node-calculator",
+  "version": "1.0.0",
+  "description": "Make a calculator adding an endpoint for each operation [Add,Substract,Multiply,Divide], each endpoint will receive two numbers and return the result",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Armin Cano",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
