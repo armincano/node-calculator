@@ -5,9 +5,6 @@ const port = 3000;
 function containsQueryValues(req) {
 	return req.query.value1 && req.query.value2;
 }
-function containsParamsValues(req) {
-	return req.params.value1 && req.params.value2;
-}
 
 const add = (value1, value2) => parseInt(value1) + parseInt(value2);
 const substract = (value1, value2) => parseInt(value1) - parseInt(value2);
@@ -39,6 +36,8 @@ const myLogger = (req, res, next) => {
 };
 app.use(myLogger);
 
+// GET /add -> BAD REQUEST
+// GET /add?value1=10&value2=2 -> OK
 app.get("/add", (req, res) => {
 	if (containsQueryValues(req)) {
 		let value1 = req.query.value1;
@@ -49,15 +48,13 @@ app.get("/add", (req, res) => {
 		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
+// GET /add/10/2 -> OK
+// GET /add/10 -> Cannot GET /add/10 (Lo hace express!!)
 app.get("/add/:value1/:value2", (req, res) => {
-	if (containsParamsValues(req)) {
-		let value1 = req.params.value1;
-		let value2 = req.params.value2;
-		const addResult = add(value1, value2);
-		res.status(statusCodes.OK).send(okResult(addResult));
-	} else {
-		res.status(statusCodes.BadRequest).send(badRequestResponse());
-	}
+	let value1 = req.params.value1;
+	let value2 = req.params.value2;
+	const addResult = add(value1, value2);
+	res.status(statusCodes.OK).send(okResult(addResult));
 });
 
 app.get("/substract", (req, res) => {
@@ -71,14 +68,10 @@ app.get("/substract", (req, res) => {
 	}
 });
 app.get("/substract/:value1/:value2", (req, res) => {
-	if (containsParamsValues(req)) {
-		let value1 = req.params.value1;
-		let value2 = req.params.value2;
-		const substractResult = substract(value1, value2);
-		res.status(statusCodes.OK).send(okResult(substractResult));
-	} else {
-		res.status(statusCodes.BadRequest).send(badRequestResponse());
-	}
+	let value1 = req.params.value1;
+	let value2 = req.params.value2;
+	const substractResult = substract(value1, value2);
+	res.status(statusCodes.OK).send(okResult(substractResult));
 });
 
 app.get("/multiply", (req, res) => {
@@ -92,14 +85,10 @@ app.get("/multiply", (req, res) => {
 	}
 });
 app.get("/multiply/:value1/:value2", (req, res) => {
-	if (containsParamsValues(req)) {
-		let value1 = req.params.value1;
-		let value2 = req.params.value2;
-		const multiplyResult = multiply(value1, value2);
-		res.status(statusCodes.OK).send(okResult(multiplyResult));
-	} else {
-		res.status(statusCodes.BadRequest).send(badRequestResponse());
-	}
+	let value1 = req.params.value1;
+	let value2 = req.params.value2;
+	const multiplyResult = multiply(value1, value2);
+	res.status(statusCodes.OK).send(okResult(multiplyResult));
 });
 
 app.get("/divide", (req, res) => {
@@ -113,14 +102,21 @@ app.get("/divide", (req, res) => {
 	}
 });
 app.get("/divide/:value1/:value2", (req, res) => {
-	if (containsParamsValues(req)) {
-		let value1 = req.params.value1;
-		let value2 = req.params.value2;
-		const divideResult = divide(value1, value2);
-		res.status(statusCodes.OK).send(okResult(divideResult));
-	} else {
-		res.status(statusCodes.BadRequest).send(badRequestResponse());
-	}
+	let value1 = req.params.value1;
+	let value2 = req.params.value2;
+	const divideResult = divide(value1, value2);
+	res.status(statusCodes.OK).send(okResult(divideResult));
+});
+
+app.use((req, res) => {
+	console.log("THIS REQUEST DIDN'T MATCH ...");
+	console.log({
+		url: req.url,
+		params: req.params,
+		query: req.query,
+	});
+
+	res.send("no match :(");
 });
 
 app.listen(port, () => {
