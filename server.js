@@ -2,10 +2,35 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+function containsQueryValues(req) {
+	return req.query.value1 && req.query.value2;
+}
+function containsParamsValues(req) {
+	return req.params.value1 && req.params.value2;
+}
+
 const add = (value1, value2) => parseInt(value1) + parseInt(value2);
 const substract = (value1, value2) => parseInt(value1) - parseInt(value2);
 const multiply = (value1, value2) => parseInt(value1) * parseInt(value2);
 const divide = (value1, value2) => parseInt(value1) / parseInt(value2);
+
+const statusCodes = {
+	OK: 200,
+	BadRequest: 400,
+	NotFound: 404,
+};
+
+const okResult = (result) => ({
+	result: result,
+	message: "Everything ok!",
+});
+
+function badRequestResponse() {
+	return {
+		sum: null,
+		message: "both 'value1' and 'value2' are mandatory in the query string",
+	};
+}
 
 const myLogger = (req, res, next) => {
 	const visitTime = new Date();
@@ -15,82 +40,86 @@ const myLogger = (req, res, next) => {
 app.use(myLogger);
 
 app.get("/add", (req, res) => {
-	if (Object.keys(req.query).length !== 0) {
+	if (containsQueryValues(req)) {
 		let value1 = req.query.value1;
 		let value2 = req.query.value2;
-		res.send(`<h2>${value1}+${value2} equals ${add(value1, value2)}</h2>`);
+		const addResult = add(value1, value2);
+		res.status(statusCodes.OK).send(okResult(addResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 app.get("/add/:value1/:value2", (req, res) => {
-	if (Object.keys(req.params).length !== 0) {
+	if (containsParamsValues(req)) {
 		let value1 = req.params.value1;
 		let value2 = req.params.value2;
-		res.send(`<h2>${value1}+${value2} equals ${add(value1, value2)}</h2>`);
+		const addResult = add(value1, value2);
+		res.status(statusCodes.OK).send(okResult(addResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 
 app.get("/substract", (req, res) => {
-	if (Object.keys(req.query).length !== 0) {
+	if (containsQueryValues(req)) {
 		let value1 = req.query.value1;
 		let value2 = req.query.value2;
-		res.send(
-			`<h2>${value1}-${value2} equals ${substract(value1, value2)}</h2>`
-		);
+		const substractResult = substract(value1, value2);
+		res.status(statusCodes.OK).send(okResult(substractResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 app.get("/substract/:value1/:value2", (req, res) => {
-	if (Object.keys(req.params).length !== 0) {
+	if (containsParamsValues(req)) {
 		let value1 = req.params.value1;
 		let value2 = req.params.value2;
-		res.send(
-			`<h2>${value1}-${value2} equals ${substract(value1, value2)}</h2>`
-		);
+		const substractResult = substract(value1, value2);
+		res.status(statusCodes.OK).send(okResult(substractResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 
 app.get("/multiply", (req, res) => {
-	if (Object.keys(req.query).length !== 0) {
+	if (containsQueryValues(req)) {
 		let value1 = req.query.value1;
 		let value2 = req.query.value2;
-		res.send(`<h2>${value1}*${value2} equals ${multiply(value1, value2)}</h2>`);
+		const multiplyResult = multiply(value1, value2);
+		res.status(statusCodes.OK).send(okResult(multiplyResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 app.get("/multiply/:value1/:value2", (req, res) => {
-	if (Object.keys(req.params).length !== 0) {
+	if (containsParamsValues(req)) {
 		let value1 = req.params.value1;
 		let value2 = req.params.value2;
-		res.send(`<h2>${value1}*${value2} equals ${multiply(value1, value2)}</h2>`);
+		const multiplyResult = multiply(value1, value2);
+		res.status(statusCodes.OK).send(okResult(multiplyResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 
 app.get("/divide", (req, res) => {
-	if (Object.keys(req.query).length !== 0) {
+	if (containsQueryValues(req)) {
 		let value1 = req.query.value1;
 		let value2 = req.query.value2;
-		res.send(`<h2>${value1}/${value2} equals ${divide(value1, value2)}</h2>`);
+		const divideResult = divide(value1, value2);
+		res.status(statusCodes.OK).send(okResult(divideResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 app.get("/divide/:value1/:value2", (req, res) => {
-	if (Object.keys(req.params).length !== 0) {
+	if (containsParamsValues(req)) {
 		let value1 = req.params.value1;
 		let value2 = req.params.value2;
-		res.send(`<h2>${value1}/${value2} equals ${divide(value1, value2)}</h2>`);
+		const divideResult = divide(value1, value2);
+		res.status(statusCodes.OK).send(okResult(divideResult));
 	} else {
-		res.send(`<h2>There are no queries<h2>`);
+		res.status(statusCodes.BadRequest).send(badRequestResponse());
 	}
 });
 
